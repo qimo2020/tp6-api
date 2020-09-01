@@ -2,7 +2,6 @@
 # tp6-api
 ThinkPHP6接口应用
 =======
-# ThinkPHP6接口应用
 
 
 基于ThinkPHP6.0的接口应用
