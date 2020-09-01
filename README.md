@@ -1,6 +1,5 @@
 
-ThinkPHP6接口应用
-=======
+#ThinkPHP6接口应用
 
 
 基于ThinkPHP6.0的接口应用
@@ -33,4 +32,3 @@ ThinkPHP6接口应用
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/0901/101010_1ac3368a_5660340.png "6.png")
 
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/0901/101315_8ff4adb7_5660340.png "7.png")
->>>>>>> 6ae8643a44ccfdeee399a4057a760f9fb8bed3ac
