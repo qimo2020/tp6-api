@@ -13,7 +13,10 @@
 
 5.  API请求参数校验，可直接在后台通过正则定义；
 
-还有更多功能可安装了解
+6. API文档部分提供 接口测试工具，可在后台开启；
+
+
+还有更多功能可通过安装了解
 
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/0901/100617_bb5d29af_5660340.png "2.png")
 
@@ -22,3 +25,7 @@
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/0901/100643_cd20190f_5660340.png "4.png")
 
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/0901/100655_7c260216_5660340.png "22.png")
+
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0901/100959_7bc38879_5660340.png "5.png")
+
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0901/101010_1ac3368a_5660340.png "6.png")
