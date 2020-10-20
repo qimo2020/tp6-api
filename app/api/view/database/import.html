@@ -1,0 +1,43 @@
+<link rel="stylesheet" href="__PUBLIC_PACK__/layui/css/layui.css?v={:config('api.version')}" media="all">
+<style>.storage-box{padding: 40px 0;background-color: #fff;}  .bottom-submit-box{padding-left:40px;}</style>
+<div class="storage-box">
+    <form class="layui-form pt10" action="{:url()}" id="editForm" method="post">
+        <div class="layui-form-item">
+            <label class="layui-form-label">上传文件</label>
+            <div class="layui-input-inline upload">
+                <button type="button" name="upload" class="layui-btn layui-btn-primary layui-upload" lay-data="{exts:'zip', accept:'file'}">请上传模块安装包</button>
+                <input type="hidden" class="upload-input" name="file">
+            </div>
+            <div class="layui-form-mid layui-word-aux">只支持xml格式的文件</div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <input type="hidden" value="{:request()->param()['app_id']??''}" name="app_id"/>
+                <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit">开始导入</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="__PUBLIC_PACK__/layui/layui.js?v={:config('api.version')}"></script>
+<script>
+    layui.use(['jquery', 'laydate', 'upload'], function() {
+        var $ = layui.jquery, layer = layui.layer, upload = layui.upload;
+        upload.render({
+            elem: '.layui-upload',
+            url: '{:url("system/annex/upload?thumb=no&water=no&group=api&driver=local")}'
+            ,method: 'post'
+            ,before: function(input) {
+                layer.msg('文件上传中...', {time:3000000});
+            },done: function(res, index, upload) {
+                var obj = this.item;
+                if (res.code == 0) {
+                    layer.msg(res.msg);
+                    return false;
+                }
+                layer.closeAll();
+                $(obj).parents('.upload').find('.upload-input').val(res.data.file);
+                $(obj).parents('.upload').find('button').text('文件上传成功');
+            }
+        });
+    });
+</script>
