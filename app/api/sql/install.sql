@@ -68,7 +68,7 @@ CREATE TABLE `pre_api_param` (
   `param_type` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '参数类型:0请求参数;1返回参数',
   `is_need` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否必须',
   `def_val` varchar(60) DEFAULT '' COMMENT '参数默认值',
-  `rule` text DEFAULT '' COMMENT '验证规则',
+  `rule` text COMMENT '验证规则',
   `intro` varchar(100) DEFAULT '' COMMENT '参数说明',
   `sort` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '排序[文档排序]',
   `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '0未启用;1已启用',
