@@ -195,7 +195,7 @@ INFO;
                         array_multisort($keySortArr, SORT_ASC, $v);
                         $str .= "class " . ucfirst($v[0]['controller']) . " extends Common\n{\n\n";
                         $str .= "    public function __call(\$method, \$args){\n";
-                        $str .= "       return json(['code'=>0, 'msg'=>'404']);\n";
+                        $str .= "       return json(['result' =>0, 'msg'=>'404']);\n";
                         $str .= "    }\n\n";
                         foreach ($v as $val) {
                             $str .= "	/**\n";
@@ -229,7 +229,7 @@ INFO;
                             $str .= " 	* @test " . $val['test_auth'] . "\n";
                             $str .= " 	*/\n";
                             $str .= "    public function " . $val['name'] . "(){";
-                            $str .= "\n       return json(['code'=>1, 'msg'=>'" . $app . self::$ds . 'api' . ($val['version'] ? self::$ds . $val['version'] : '') . self::$ds . $val['controller'] . self::$ds . $val['name'] . "']);";
+                            $str .= "\n       return json(['result' =>1, 'msg'=>'" . $app . self::$ds . 'api' . ($val['version'] ? self::$ds . $val['version'] : '') . self::$ds . $val['controller'] . self::$ds . $val['name'] . "']);";
                             $str .= "\n    }\n\n";
                         }
                         $str .= "\n\n}";

@@ -95,7 +95,7 @@ layui.use(['element','layer'], function() {
                 headers:headers,
                 data: post.filter(function(item){return item}),
                 success: function(res) {
-                    if(res.code == 0){
+                    if(res.result == 0){
                         layer.msg(res.msg);
                         return false;
                     }
@@ -175,7 +175,7 @@ layui.use(['element','layer'], function() {
             if (window.history && window.history.pushState && window.history.replaceState) {
                 window.history.pushState({status: 0}, '', currid);
                 detial(currid, function (res) {
-                    if (res.code && res.code == 1 && res.iid && res.iid != currid) {
+                    if (res.result && res.result == 1 && res.iid && res.iid != currid) {
                         window.history.pushState({status: 0}, '', res.iid);
                     } else {
                         if (hostid != respid) {

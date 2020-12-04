@@ -116,8 +116,8 @@ class Codes extends Common
                         'width' => 80,
                     ],
                     [
-                        'field' => 'name',
-                        'title' => '返回码名',
+                        'field' => 'code',
+                        'title' => '返回码',
                     ],
                     [
                         'field' => 'title',

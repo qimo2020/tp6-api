@@ -9,7 +9,7 @@ return [
     'author' => 'hiphp',
     'icon' => '/static/m_api/images/app.png',
     'iconfont' => 'default/css/iconfont.css',
-    'version' => '1.0.0',
+    'version' => '1.0.2',
     'author_url' => '',
     'module_depend'=>[],
     'tables'=>['api_app','api_controller','api_action','api_param','api_code','api_token'],

@@ -8,11 +8,11 @@ class JwtAuth
         $headers = \think\facade\Request::header();
         $token = trim($headers['token']);
         if(!isset($token) || !$token){
-            return json(['code'=>0, 'msg'=>'缺少TOKEN']);
+            return json(['result' =>0, 'error_code'=>30001, 'msg'=>'缺少TOKEN']);
         }
         $jwt = new \app\api\lib\JwtToken();
         if(false === $jwt::check($token)){
-            return json(['code'=>0, 'msg'=>$jwt::getError()]);
+            return json(['result' =>0, 'error_code'=>30001, 'msg'=>$jwt::getError()]);
         }
         return $next($request);
     }

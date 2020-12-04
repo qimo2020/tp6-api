@@ -12,11 +12,11 @@ class Info extends Base
     public function index()
     {
         if (!$this->request->isPost()) {
-            return json(['code' => 0]);
+            return json(['result' => 0]);
         }
         $post = $this->request->post();
         if (empty($post) || !isset($post['app_id'])) {
-            return json(['code' => 0]);
+            return json(['result' => 0]);
         }
         $defaultId = 0;
         $sidebars = [];
@@ -39,26 +39,26 @@ class Info extends Base
         $params = $this->request->param();
         $app = ApiApp::first($params['app_id'] ?? 1);
         $iid = !empty($params) && isset($params['iid']) ? $params['iid'] : $defaultId;
-        return json(['code' => 1, 'data' => $sidebars, 'iid' => $iid, 'version' => $app['version'], 'params' => $this->request->param()]);
+        return json(['result' => 1, 'data' => $sidebars, 'iid' => $iid, 'version' => $app['version'], 'params' => $this->request->param()]);
     }
 
     public function detail()
     {
         if (!$this->request->isPost()) {
-            return json(['code' => 0]);
+            return json(['result' => 0]);
         }
         $post = $this->request->post();
         if (empty($post) || !isset($post['iid'])) {
-            return json(['code' => 0]);
+            return json(['result' => 0]);
         }
-        $return = ['code' => 1];
+        $return = ['result' => 1];
         $action = ApiAction::find($post['iid']);
         if ($action !== null) {
             $return['iid'] = $post['iid'];
             $apps = ApiApp::items();
             $controller = ApiController::find($action->cid);
             if (null === $controller) {
-                return json(['code' => 0, 'test' => $controller]);
+                return json(['result' => 0, 'test' => $controller]);
             }
             $class = $method = '';
             foreach ($apps as $v) {
@@ -70,12 +70,12 @@ class Info extends Base
                 }
             }
             if (!$method) {
-                return json(['code' => 0]);
+                return json(['result' => 0]);
             }
             $this->doc = new Doc();
             $return['content'] = $this->doc->getlist($class, $method);
         } else {
-            $return['code'] = 0;
+            $return['result'] = 0;
         }
         return json($return);
     }
@@ -83,15 +83,15 @@ class Info extends Base
     public function getSign()
     {
         if(!$this->request->isPost()){
-            return json(['code' => 0, 'msg' => '非法请求']);
+            return json(['result' => 0, 'msg' => '非法请求']);
         }
         $member = session('member');
         if (!$member || !isset($member['uid'])) {
-            return json(['code' => 0, 'msg' => '未登陆']);
+            return json(['result' => 0, 'msg' => '未登陆']);
         }
         $ids = configs('api')['test_member'];
         if (!$ids || !in_array($member['uid'], explode(',', $ids))) {
-            return json(['code' => 0, 'msg' => '该用户未授权']);
+            return json(['result' => 0, 'msg' => '该用户未授权']);
         }
         try {
             $headers = request()->header();
@@ -100,7 +100,7 @@ class Info extends Base
                 $publics = [];
                 foreach ($pubParams as $v) {
                     if ($v['name'] != 'sign' && (!isset($headers[$v['name']]) || empty($headers[$v['name']]))) {
-                        return json(['code' => 0, 'msg' => $v['name'] . '不能为空']);
+                        return json(['result' => 0, 'msg' => $v['name'] . '不能为空']);
                     }
                     if ($v['name'] != 'sign') {
                         $publics[$v['name']] = $headers[$v['name']];
@@ -111,32 +111,31 @@ class Info extends Base
             $appId = $params['app_id'];
             unset($params['app_id']);
             if (empty(array_filter($params))) {
-                return json(['code' => 0, 'msg' => '请求参数不能空']);
+                return json(['result' => 0, 'msg' => '请求参数不能空']);
             }
             foreach ($publics as $k => $v) {
                 $params[$k] = $v;
             }
-            $params['ip'] = isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : getClientIp();
             $appInfo = ApiApp::first($appId);
             $sign = \hi\Sign::getSign($params, $appInfo['api_secret_key'], true);
-            return json(['code' => 1, 'sign' => $sign]);
+            return json(['result' => 1, 'sign' => $sign]);
         } catch (\Exception $e) {
-            return json(['code' => 0, 'msg' => $e->getMessage()]);
+            return json(['result' => 0, 'msg' => $e->getMessage()]);
         }
     }
 
     public function getToken()
     {
         if(!$this->request->isPost()){
-            return json(['code' => 0, 'msg' => '非法请求']);
+            return json(['result' => 0, 'msg' => '非法请求']);
         }
         $member = session('member');
         if (!$member || !isset($member['uid'])) {
-            return json(['code' => 0, 'msg' => '未登陆']);
+            return json(['result' => 0, 'msg' => '未登陆']);
         }
         $ids = configs('api')['test_member'];
         if (!$ids || !in_array($member['uid'], explode(',', $ids))) {
-            return json(['code' => 0, 'msg' => '该用户未授权']);
+            return json(['result' => 0, 'msg' => '该用户未授权']);
         }
         try {
             $headers = request()->header();
@@ -144,24 +143,25 @@ class Info extends Base
             if ($params) {
                 foreach ($params as $v) {
                     if ($v['name'] != 'token' && (!isset($headers[$v['name']]) || empty($headers[$v['name']]))) {
-                        return json(['code' => 0, 'msg' => $v['name'] . '不能为空']);
+                        return json(['result' => 0, 'msg' => $v['name'] . '不能为空']);
                     }
                 }
             }
             if ($member['uuid'] != $headers['uuid']) {
-                return json(['code' => 0, 'msg' => 'UUID无效']);
+                return json(['result' => 0, 'msg' => 'UUID无效']);
             }
-            $tag = 'hi_token_' . $headers['client'] . $headers['uuid'];
-            $token = cache($tag);
-            if (!$token) {
-                $token = randomStr(rand(80, 100), 8);
+            $tag = 'token_pc_' . $headers['uuid'];
+            $tokenInfo = cache($tag);
+            if (!$tokenInfo) {
+                $tokenInfo['uid'] = $member['uid'];
+                $tokenInfo['token'] = randomStr(rand(80, 100), 8);
                 $expire = config('api.user_token_expire');
-                cache($tag, $token, ['expire' => $expire * 60 * 60], self::$appTag);
+                cache($tag, $tokenInfo, ['expire' => $expire * 60 * 60], self::$appTag);
             }
-            $token = md5($token . $headers['timestamp'] . $headers['nonce']);
-            return json(['code' => 1, 'token' => $token]);
+            $token = md5($tokenInfo['token'] . $headers['timestamp'] . $headers['nonce']);
+            return json(['result' => 1, 'token' => $token]);
         } catch (\Exception $e) {
-            return json(['code' => 0, 'msg' => $e->getMessage().$e->getFile().$e->getLine()]);
+            return json(['result' => 0, 'msg' => $e->getMessage().$e->getFile().$e->getLine()]);
         }
     }
 
