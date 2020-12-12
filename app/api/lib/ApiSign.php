@@ -22,14 +22,21 @@ class ApiSign
             $newParams[$v['name']] = $headers[$v['name']];
         }
         $newParams = array_merge($newParams, $this->data);
-        $newParams = array_filter($newParams, function($v){
+        $newParams = array_filter($newParams, function($v, $k){
+            $controller = request()->controller();
+            if(strpos($controller, '.') !== false){
+                $version = explode('.', $controller)[0];
+                if(isset($version) && $k == $version){
+                    return false;
+                }
+            }
             return is_null($v) || $v === '' ? false : true;
-        });
+        },ARRAY_FILTER_USE_BOTH);
         $data = $newParams;
         unset($newParams['sign']);
         $sign = \hi\Sign::getSign($newParams, $this->config['api_secret_key'], true);
         if($data['sign'] != $sign){
-            self::$error = $sign;
+            self::$error = '签名错误';
             return false;
         }
         return true;
